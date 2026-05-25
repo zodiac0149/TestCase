@@ -311,7 +311,7 @@ export const WorkspacePage = () => {
         </div>
 
         {/* ── Main content ── */}
-        <section className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+        <section className="grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
           <div className="space-y-6">
             <form onSubmit={generate} className="surface p-5">
               <div className="mb-4 flex items-center justify-between gap-3">

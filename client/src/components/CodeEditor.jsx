@@ -22,7 +22,17 @@ export const CodeEditor = ({ value, onChange, darkMode }) => {
           onChange={(event) => onChange(event.target.value)}
         />
       ) : (
-        <SyntaxHighlighter language="markdown" style={darkMode ? oneDark : oneLight} customStyle={{ margin: 0, minHeight: 360 }}>
+        <SyntaxHighlighter
+          language="markdown"
+          style={darkMode ? oneDark : oneLight}
+          wrapLines={true}
+          customStyle={{
+            margin: 0,
+            minHeight: 360,
+            wordBreak: 'break-word',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
           {value || 'Generated tests will appear here.'}
         </SyntaxHighlighter>
       )}

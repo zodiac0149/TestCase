@@ -8,13 +8,20 @@ import { repositoryRoutes } from './routes/repositoryRoutes.js';
 import { generationRoutes } from './routes/generationRoutes.js';
 import { chatRoutes } from './routes/chatRoutes.js';
 import { exportRoutes } from './routes/exportRoutes.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { errorHandler, notFound } from './middlewares/errorHandler.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const clientDistPath = path.resolve(__dirname, '..', '..', 'client', 'dist');
 
 export const app = express();
 
 app.use(cors({ origin: env.clientUrl, credentials: true }));
 app.use(express.json({ limit: '2mb' }));
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, limit: 300 }));
+
+app.use(express.static(clientDistPath));
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 app.use('/api/auth', authRoutes);
@@ -23,5 +30,13 @@ app.use('/api/repositories', repositoryRoutes);
 app.use('/api/generate', generationRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/export', exportRoutes);
+
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    return next();
+  }
+  res.sendFile(path.join(clientDistPath, 'index.html'));
+});
+
 app.use(notFound);
 app.use(errorHandler);
